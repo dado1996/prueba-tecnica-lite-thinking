@@ -4,6 +4,12 @@ import { auth } from "../../lib/firebase";
 import React, { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 
+/**
+ * Generates the layout components, with its buttons and
+ * login validations
+ * @author Diego Delgado
+ * @returns Layout component
+ */
 function Layout() {
   const navigate = useNavigate();
   const { user, signout } = useContext(AuthContext);

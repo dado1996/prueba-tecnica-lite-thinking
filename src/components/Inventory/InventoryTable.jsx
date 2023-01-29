@@ -20,8 +20,15 @@ const styles = {
   },
 }
 
-function InventoryTable({ r }) {
-  const data = r;
+/**
+ * The inventory table to display the items list
+ * but only if a business is selected
+ * @author Diego Delgado
+ * @param {Object} props
+ * @param {Object} props.data The data to be displayed
+ * @return The component with the inventory table
+ */
+function InventoryTable({ data }) {
   const columns = [
     {
       Header: 'Name',

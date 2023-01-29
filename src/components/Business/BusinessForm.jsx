@@ -21,6 +21,14 @@ const errorsStyles = {
   color: 'red'
 };
 
+/**
+ * The component form to create new business
+ * @author Diego Delgado
+ * @param {Object} props
+ * @param {boolean} props.showForm Controls the hidden state of the form
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} props.setShowForm Changes the value of showForm
+ * @returns The form component for business
+ */
 function BusinessForm({ showForm, setShowForm }) {
   const collectionRef = collection(database, 'business');
   const {

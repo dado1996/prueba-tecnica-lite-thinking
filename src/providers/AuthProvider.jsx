@@ -3,6 +3,13 @@ import { authInstance } from '../auth/auth';
 
 const AuthContext = createContext(null);
 
+/**
+ * Auth provider to control access
+ * @author Diego Delgado
+ * @param {Object} props
+ * @param {React.FC} children The components inside the auth provider
+ * @returns The authentication component to restrict access to certain components
+ */
 function AuthProvider({ children }) {
   let [user, setUser] = useState({});
 

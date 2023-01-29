@@ -10,10 +10,18 @@ const businessStyles = {
   margin: 20,
 };
 
+/**
+ * The business component with the table to display the businesses
+ * and the form to create new business but only if the user is
+ * logged in
+ * @author Diego Delgado
+ * @returns Business component
+ */
 function Business() {
   const collectionRef = collection(database, 'business');
   const businessQuery = query(collectionRef, limit(1000));
   const [rowsData, setRowsData] = useState([]);
+  const [show, setShow] = useState(false);
   const { user } = useContext(AuthContext);
   const isSignedIn = Object.entries(user).length > 0;
 
@@ -21,7 +29,6 @@ function Business() {
     getData();
   }, []);
   
-  const [show, setShow] = useState(false);
   
   const handleShow = () => {
     setShow(!show);
@@ -50,7 +57,7 @@ function Business() {
       <BusinessForm showForm={show} setShowForm={setShow} />
 
       <div>
-        <BusinessTable r={rowsData} />
+        <BusinessTable data={rowsData} />
       </div>
     </div>
   );

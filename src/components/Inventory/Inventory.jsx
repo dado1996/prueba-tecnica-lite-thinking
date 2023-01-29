@@ -13,7 +13,7 @@ const inventoryStyles = {
 
 /**
  * Inventory page with the data and form to create new products
- * 
+ * @author Diego Delgado
  * @return The inventory component
  */
 function Inventory() {
@@ -97,7 +97,7 @@ function Inventory() {
       </Box>
 
       <div>
-        <InventoryTable r={rowsData} />
+        <InventoryTable data={rowsData} />
       </div>
       <Grid container>
         <Grid item xs={6}>

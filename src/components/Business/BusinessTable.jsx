@@ -20,8 +20,15 @@ const styles = {
   },
 }
 
-function BusinessTable({ r }) {
-  const data =  r;
+/**
+ * The table component to display the list of
+ * businesses
+ * @author Diego Delgado
+ * @param {Objecto} props
+ * @param {Object} props.data The data to display
+ * @returns The component of the business table
+ */
+function BusinessTable({ data }) {
   const columns = [
     {
       Header: 'NIT',

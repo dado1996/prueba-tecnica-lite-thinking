@@ -1,3 +1,6 @@
+/**
+ * Auth initial instance
+ */
 const authInstance = {
   isAuthenticated: false,
   signin(callback) {

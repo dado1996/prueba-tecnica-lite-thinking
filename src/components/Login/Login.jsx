@@ -22,6 +22,12 @@ const buttonsWrapperStyle = {
   alignItems: "center"
 };
 
+/**
+ * Function that generates the login component, with its form
+ * and respective validations
+ * @author Diego Delgado
+ * @returns Login component
+ */
 function Login() {
   const { handleSubmit, control } = useForm();
   const { signin } = useContext(AuthContext);

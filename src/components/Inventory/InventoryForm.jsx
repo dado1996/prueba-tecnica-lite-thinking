@@ -21,6 +21,15 @@ const errorsStyles = {
   color: 'red'
 };
 
+/**
+ * The inventory form component with the respective
+ * validations
+ * @author Diego Delgado
+ * @param {Object} props 
+ * @param {Boolean} props.showForm
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} props.setShowForm Changes the value of showForm
+ * @returns The inventory form component to create new inventory elements
+ */
 function InventoryForm({ showForm, setShowForm }) {
   const [businessList, setBusinessList] = useState([]);
   const businessQuery = query(collection(database, 'business'), limit(1000));

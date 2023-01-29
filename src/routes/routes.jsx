@@ -10,6 +10,12 @@ function useAuth() {
   return useContext(AuthContext);
 }
 
+/**
+ * The routes component that contains all the
+ * routes to be accesible by the user
+ * @author Diego Delgado
+ * @returns The routes to be mapped in the app
+ */
 function RoutesApp() {
   return (
     <Routes>
