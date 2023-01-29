@@ -42,10 +42,6 @@ function InventoryTable({ data }) {
       Header: 'Unit',
       accesor: 'unit'
     },
-    {
-      Header: 'Business',
-      accesor: 'Business'
-    },
   ];
   
   return (
@@ -80,9 +76,6 @@ function InventoryTable({ data }) {
                 <td
                   style={styles.cells}
                 >{row.unit}</td>
-                <td
-                  style={styles.cells}
-                >{row.business_ref.name}</td>
               </tr>
             );
           })

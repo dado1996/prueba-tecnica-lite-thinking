@@ -19,6 +19,7 @@ const inventoryStyles = {
 function Inventory() {
   const [businessList, setBusinessList] = useState([]);
   const [currentBusiness, setCurrentBusiness] = useState('*');
+  // const [currentBusinessName, setCurrentBusinessName] = useState('');
   const businessRef = collection(database, 'business');
   const businessQuery = query(businessRef, limit(1000));
   const [rowsData, setRowsData] = useState([]);
@@ -26,7 +27,13 @@ function Inventory() {
   const isSignedIn = Object.entries(user).length > 0;
 
   useEffect(() => {
-    getData();
+    if (businessList.length === 0) {
+      getBusiness();
+    }
+
+    if (currentBusiness !== '*') {
+      getInventories();
+    }
     
   }, [currentBusiness]);
   
@@ -36,35 +43,33 @@ function Inventory() {
     setShow(!show);
   }
 
-  const getData = () => {
-    const inventoryRef = collection(database, `business/${currentBusiness}/inventory`);
+  const getBusiness = () => {
+    onSnapshot(businessQuery, (data) => {
+      const result = data.docs.map(item => {
+        return {
+          id: item.id,
+          name: item.data().name,
+        };
+      });
+      setBusinessList(result);
+    });
+  };
+
+  const getInventories = () => {
+    const inventoryRef = collection(database, `business/${currentBusiness}/inventory/`);
     const inventoryQuery = query(inventoryRef, limit(1000));
     onSnapshot(inventoryQuery, (data) => {
       const result = data.docs.map(item => {
-        const row = item.data();
-        console.log(item);
         return {
-          name: row.name,
-          amount: row.amount,
-          unit: row.unit,
-          business_ref: '',
-        };
+          name: item.data().name,
+          amount: item.data().amount,
+          unit: item.data().unit,
+        }
       });
 
       setRowsData(result);
     });
-
-    onSnapshot(businessQuery, (data) => {
-      const result = data.docs.map(item => {
-        const row = item.data();
-        return {
-          id: item.id,
-          name: row.name
-        }
-      });
-      setBusinessList(result);
-    });
-  }
+  };
 
   const handleChangeBusinessFilter = (event) => {
     setCurrentBusiness(event.target.value);
