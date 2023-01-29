@@ -1,6 +1,9 @@
+import React from 'react';
 import { Button, TextField } from "@mui/material";
+import { addDoc, collection } from "firebase/firestore";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { database } from "../../lib/firebase";
 
 const formStyles = {
   margin: 20,
@@ -19,19 +22,19 @@ const errorsStyles = {
 };
 
 function BusinessForm({ showForm, setShowForm }) {
+  const collectionRef = collection(database, 'business');
   const {
     handleSubmit,
     control,
     formState: {
       errors
     }
-  } = useForm({
-    mode: 'onChange'
-  });
+  } = useForm();
 
-  const onSubmit = ({ nit, name, address, phone }) => {
+  const onSubmit = async ({ nit, name, address, phone }) => {
     try {
-
+      await addDoc(collectionRef, { nit, name, address, phone });
+      toast.success('Data added successfully');
     } catch (e) {
       toast.error(e.message);
     } finally {
@@ -46,13 +49,9 @@ function BusinessForm({ showForm, setShowForm }) {
         <Controller
           name="nit"
           rules={{
-            numeric: 'Not a valid NIT',
-            maxLength: {
-              value: 8,
-              message: 'Not a valid NIT'
-            },
-            minLength: {
-              value: 8,
+            required: 'NIT is required',
+            pattern: {
+              value: /[0-9]{8}/,
               message: 'Not a valid NIT'
             },
           }}
@@ -67,10 +66,16 @@ function BusinessForm({ showForm, setShowForm }) {
             />
           )}
         />
+        {
+          errors.nit && <p style={errorsStyles}>{errors.nit.message}</p>
+        }
 
         <Controller
           name="name"
           control={control}
+          rules={{
+            required: 'Name is required',
+          }}
           render={({ field }) => (
             <TextField
               {...field}
@@ -81,10 +86,16 @@ function BusinessForm({ showForm, setShowForm }) {
             />
           )}
         />
+        {
+          errors.name && <p style={errorsStyles}>{errors.name.message}</p>
+        }
 
         <Controller
           name="address"
           control={control}
+          rules={{
+            required: 'Address is required',
+          }}
           render={({ field }) => (
             <TextField
               {...field}
@@ -95,10 +106,20 @@ function BusinessForm({ showForm, setShowForm }) {
             />
           )}
         />
+        {
+          errors.address && <p style={errorsStyles}>{errors.address.message}</p>
+        }
 
         <Controller
           name="phone"
           control={control}
+          rules={{
+            required: 'Phone is required',
+            pattern: {
+              value: /3[0-9]{9}/,
+              message: 'Not a valid phone'
+            }
+          }}
           render={({ field }) => (
             <TextField
               {...field}

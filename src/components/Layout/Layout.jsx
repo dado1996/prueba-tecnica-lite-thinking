@@ -1,12 +1,14 @@
-import { AppBar, Box, Button, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../../lib/firebase";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 
 function Layout() {
   const navigate = useNavigate();
-  const { signout } = useContext(AuthContext);
+  const { user, signout } = useContext(AuthContext);
+
+  const isSignedIn = Object.entries(user).length > 0;
 
   const handleSignout = () => {
     signout(() => {
@@ -19,16 +21,19 @@ function Layout() {
     <div>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
-          <Toolbar>
+          <Toolbar style={{ display: 'flex', justifyContent: 'space-evenly' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Button style={{ color: 'white' }} variant="text" onClick={() => navigate('/business')}>
                   Business
                 </Button>
-                <Button style={{ color: 'white' }} variant="text" onClick={() => navigate('/inventory', { replace: true })}>
+                <Button hidden={!isSignedIn} style={{ color: 'white' }} variant="text" onClick={() => navigate('/inventory', { replace: true })}>
                   Inventory
                 </Button>
             </Box>
-            <Button color="inherit" onClick={handleSignout}>Cerrar sesión</Button>
+            <Typography>
+              Welcome, {isSignedIn ? 'user' : 'Guest'}!
+            </Typography>
+            <Button color="inherit" onClick={handleSignout}>{isSignedIn ? 'Logout' : 'Go back to login'}</Button>
           </Toolbar>
         </AppBar>
       </Box>

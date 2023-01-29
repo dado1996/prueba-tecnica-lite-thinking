@@ -1,5 +1,5 @@
 import { Button, TextField, Typography } from "@mui/material";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -43,10 +43,14 @@ function Login() {
     }
   }
 
+  const handleGuest = () => {
+    navigate('/business', { replace: true });
+  }
+
   return (
-    <div style={{ maxWidth: '50rem', display: 'flexbox', alignItems: 'center' }}>
+    <div style={{ marginTop: 100, marginLeft: 100, width: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
       <Typography variant="h3" alignItems="center">
-        Inicio de Sesión
+        Login
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div style={wrapperStyle}>
@@ -58,7 +62,7 @@ function Login() {
                 {...field}
                 id="email"
                 type="email"
-                label="Correo electrónico"
+                label="Email"
               />
             )}
           />
@@ -73,16 +77,17 @@ function Login() {
                 {...field}
                 id="password"
                 type="password"
-                label="Contraseña"
+                label="Password"
               />
             )}
           />
         </div>
 
         <div style={buttonsWrapperStyle}>
-          <Button variant="outlined" type="submit">Ingresar</Button>
+          <Button variant="outlined" type="submit">Login</Button>
         </div>
       </form>
+      <Button onClick={handleGuest}>Enter as guest</Button>
     </div>
   );
 }

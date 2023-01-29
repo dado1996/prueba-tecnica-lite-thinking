@@ -1,130 +1,56 @@
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { collection, query, onSnapshot, limit } from "firebase/firestore";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "react-hot-toast";
-import { useTable } from "react-table";
+import React, { useContext, useEffect, useState } from "react";
 import { database } from "../../lib/firebase";
+import { AuthContext } from "../../providers/AuthProvider";
 import BusinessForm from "./BusinessForm";
+import BusinessTable from "./BusinessTable";
 
 const businessStyles = {
   margin: 20,
 };
 
 function Business() {
-  const columns = useMemo(() => [
-    {
-      Header: 'NIT',
-      accesor: 'col1'
-    },
-    {
-      Header: 'Name',
-      accesor: 'col2'
-    },
-    {
-      Header: 'Address',
-      accesor: 'col3'
-    },
-    {
-      Header: 'Phone',
-      accesor: 'col4'
-    },
-  ], []);
   const collectionRef = collection(database, 'business');
   const businessQuery = query(collectionRef, limit(1000));
-  const rowsData = useMemo(() => {
-    let dataArray = [];
+  const [rowsData, setRowsData] = useState([]);
+  const { user } = useContext(AuthContext);
+  const isSignedIn = Object.entries(user).length > 0;
 
-    onSnapshot(businessQuery, (data) => {
-      dataArray = data.docs.map(item => {
-        const row = item.data();
-        return {
-          col1: row.nit,
-          col2: row.name,
-          col3: row.address,
-          col4: row.phone
-        };
-      });
-    });
-
-    return dataArray;
-  }, [businessQuery]);
-  console.log(rowsData);
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({ columns, data: rowsData });
+  useEffect(() => {
+    getData();
+  }, []);
+  
   const [show, setShow] = useState(false);
   
   const handleShow = () => {
     setShow(!show);
   }
 
+  const getData = () => {
+    onSnapshot(businessQuery, (data) => {
+      const result = data.docs.map(item => {
+        const row = item.data();
+        return {
+          nit: row.nit,
+          name: row.name,
+          address: row.address,
+          phone: row.phone
+        };
+      });
+
+      setRowsData(result);
+    });
+  }
+
   return (
     <div style={businessStyles}>
-      <Button style={{ display: !show ? 'block' : 'none' }} variant="outlined" onClick={handleShow}>Show form</Button>
+      <Typography variant="h4">Business</Typography>
+      <Button style={{ display: isSignedIn && !show ? 'block' : 'none' }} variant="outlined" onClick={handleShow}>Show form</Button>
       <BusinessForm showForm={show} setShowForm={setShow} />
 
       <div>
-        <table {...getTableProps()} style={{ border: '1px solid steelblue', marginTop: 15 }}>
-          <thead>
-          {
-            headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {
-                  headerGroup.headers.map(column => (
-                    <th
-                      {...column.getHeaderProps()}
-                      style={{
-                        borderBottom: 'solid 3px red',
-                        background: 'aliceblue',
-                        color: 'black',
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                      }}
-                    >
-                      {column.render('Header')}
-                    </th>
-                  ))
-                }
-              </tr>
-            ))
-          }
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {
-              rows.map(row => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {
-                      row.cells.map(cell => {
-                        return (
-                          <td
-                            {...cell.getCellProps()}
-
-                            style={{
-                              padding: '10px',
-                              border: 'solid 1px gray',
-                              background: 'papayawhip',
-                              color: 'black',
-                            }}
-                          >
-                            {
-                              cell.render('Cell')
-                            }
-                          </td>
-                        );
-                      })
-                    }
-                  </tr>
-                );
-              })
-            }
-          </tbody>
-        </table>
+        <BusinessTable r={rowsData} />
       </div>
     </div>
   );
