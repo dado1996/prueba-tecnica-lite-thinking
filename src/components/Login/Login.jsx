@@ -29,7 +29,7 @@ const buttonsWrapperStyle = {
  * @returns Login component
  */
 function Login() {
-  const { handleSubmit, control } = useForm();
+  const { handleSubmit, control, formState: { errors } } = useForm();
   const { signin } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -62,6 +62,13 @@ function Login() {
         <div style={wrapperStyle}>
           <Controller
             name="email"
+            rules={{
+              required: 'Email is required',
+              pattern: {
+                value: /[a-zA-Z0-9\_\.\-\$]+@[a-zA-Z0-9]+\.[a-z]{2,}/,
+                message: 'Not a valid email',
+              }
+            }}
             control={control}
             render={({ field }) => (
               <TextField
@@ -73,10 +80,18 @@ function Login() {
             )}
           />
         </div>
+        {errors.email && <Typography>{errors.email.message}</Typography>}
 
         <div style={wrapperStyle}>
           <Controller
             name="password"
+            rules={{
+              required: 'Password is required',
+              minLength: {
+                value: 4,
+                message: 'Password is too short'
+              }
+            }}
             control={control}
             render={({ field }) => (
               <TextField
@@ -88,6 +103,7 @@ function Login() {
             )}
           />
         </div>
+        {errors.password && <Typography>{errors.password.message}</Typography>}
 
         <div style={buttonsWrapperStyle}>
           <Button variant="outlined" type="submit">Login</Button>
