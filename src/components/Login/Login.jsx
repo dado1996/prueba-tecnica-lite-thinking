@@ -65,7 +65,7 @@ function Login() {
             rules={{
               required: 'Email is required',
               pattern: {
-                value: /[a-zA-Z0-9\_\.\-\$]+@[a-zA-Z0-9]+\.[a-z]{2,}/,
+                value: /[a-zA-Z0-9_.\-$]+@[a-zA-Z0-9]+\.[a-z]{2,}/,
                 message: 'Not a valid email',
               }
             }}
